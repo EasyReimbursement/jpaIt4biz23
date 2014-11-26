@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+  <title>Reembolso Fácil</title>
+  <link type="text/css" rel="stylesheet" href="css/le-frog/skin.css"/>
+</h:head>
+
+<h:body>
+	
+   	<h:form id="_form1">
+   	<p:panel> 
+   		<h:panelGrid id="_breadCrumbPanel" columns="1" cellpadding="5" >
+			<p:breadCrumb style="width:100%;">  
+				<p:menuitem value="Home">
+				</p:menuitem>
+				<p:menuitem>
+					<h:link outcome="usuarios" value="Usuários"></h:link>
+				</p:menuitem>
+			</p:breadCrumb>
+		</h:panelGrid>
+   		
+		<p:panel header="Usuário">
+			<h:panelGrid id="_usuario"  columns="4" cellpadding="5">
+			
+				<h:outputLabel for="_idUsuario" value="idUsuario:" />
+				<h:inputText id="_idUsuario" value="#{usuariosBean.usuario.idUsuario}" disabled="true" />				
+				<h:outputLabel for="_chaveAppUsuario" value="chaveAppUsuario:"  />
+				<h:inputText id="_chaveAppUsuario" value="#{usuariosBean.usuario.chaveAppUsuario}" />
+				
+				<h:outputLabel for="_dataHora" value="dataHora:" />
+				<h:inputText id="_dataHora" value="#{usuariosBean.usuario.dataHora}"  disabled="true">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+				</h:inputText>			
+				<h:outputLabel for="_emailUsuario" value="emailUsuario:" />
+				<h:inputText id="_emailUsuario" value="#{usuariosBean.usuario.emailUsuario}" />
+				
+				<h:outputLabel for="_login" value="login:" />
+				<h:inputText id="_login" value="#{usuariosBean.usuario.login}" />				
+				<h:outputLabel for="_senha" value="senha:"  />
+				<p:password id="_senha" value="#{usuariosBean.usuario.senha}" disabled="#{usuariosBean.senhaDisabled}"/>
+				
+				<h:outputLabel for="_tipoUsuario" value="tipoUsuario:" />
+				<h:inputText id="_tipoUsuario" value="#{usuariosBean.usuario.tipoUsuario}" />
+				<h:inputHidden />
+				<h:inputHidden />
+						
+				<p:commandButton value="#{usuariosBean.cmdBtnValue}" action="#{usuariosBean.createOrUpdate}" 
+					update="_usuarios _usuario" ajax="true" id="_cmdBtnAdicionarAtualizar" />
+				
+				<p:ajaxStatus style="width:16px;height:16px;">
+					<f:facet name="start">
+						<h:graphicImage value="../design/ajaxloading.gif" />
+						<h:outputText value="Enviando..." />
+					</f:facet>
+					
+					<f:facet name="complete">
+						<h:outputText value="" />
+					</f:facet>
+				</p:ajaxStatus>
+			</h:panelGrid>
+		
+		</p:panel>
+		<p:spacer width="100" height="10" />
+		<p:dataTable id="_usuarios" value="#{usuariosBean.usuarios}" var="u"
+			paginator="true" rows="5"
+			rowsPerPageTemplate="5,10,15">
+
+			<p:column style="text-align: center;">
+				<f:facet name="header">
+					<h:outputText value="idUsuario" />
+				</f:facet>
+				<p:button outcome="viagens" value="#{u.idUsuario}" style="min-width:100px;">
+					<f:param name="idUsuario" value="#{u.idUsuario}"/>
+				</p:button>
+			</p:column>
+	
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="chaveAppUsuario" />
+				</f:facet>
+				<h:outputText value="#{u.chaveAppUsuario}" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="dataHora" />
+				</f:facet>
+				<h:outputText value="#{u.dataHora}" >
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />  
+				</h:outputText>
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="emailUsuario" />
+				</f:facet>
+				<h:outputText value="#{u.emailUsuario}" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="tipoUsuario" />
+				</f:facet>
+				<h:outputText value="#{u.tipoUsuario}" />
+			</p:column>
+			
+			<p:column style="width:32px">
+				<f:facet name="header">
+					<h:outputText value="editar" />
+				</f:facet>
+				<p:commandButton update="_form1" image="ui-icon ui-icon-search"
+					label="edit" action="#{usuariosBean.loadForUpdate}" ajax="true">
+					<f:setPropertyActionListener target="#{usuariosBean.selectedUsuario}" value="#{u}"></f:setPropertyActionListener>
+				</p:commandButton>
+			</p:column>
+			
+		</p:dataTable>
+	</p:panel>	
+	</h:form>
+
+</h:body>
+
+</html>

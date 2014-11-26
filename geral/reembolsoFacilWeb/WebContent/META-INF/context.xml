@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" antiResourceLocking="true" 
+	 reloadable="true" >
+	 
+	<!-- reloadable="true" nao deve ser usado em producao-->
+	
+	<Resource name="jdbc/it4biz23DB" auth="Container" type="javax.sql.DataSource"
+		maxActive="20" maxIdle="5" maxWait="10000"
+		username="it4biz23_user" password="dcfvgbhn3423" driverClassName="org.postgresql.Driver"
+		url="jdbc:postgresql://174.142.48.81/4droiders_db"/>
+	
+
+</Context>

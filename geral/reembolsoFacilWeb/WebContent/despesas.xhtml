@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+  <title>Reembolso Fácil</title>
+  <link type="text/css" rel="stylesheet" href="css/le-frog/skin.css"/>
+</h:head>
+
+<h:body>
+	
+   	<h:form id="_form1">
+	<p:panel>
+		<h:panelGrid id="_breadCrumbPanel" columns="1" cellpadding="5">
+			<p:breadCrumb>  
+				<p:menuitem value="Home" url="#" />
+				<p:menuitem>
+					<h:link outcome="usuarios" value="Usuários"></h:link>
+				</p:menuitem>
+				<p:menuitem>
+					<h:link outcome="viagens" value="Viagens">
+						<f:param name="idUsuario" value="#{despesasBean.idUsuario}"/>
+					</h:link>
+				</p:menuitem>
+				<p:menuitem>
+					<h:link outcome="despesas" value="Despesas">
+						<f:param name="idUsuario" value="#{despesasBean.idUsuario}"/>
+						<f:param name="idViagem" value="#{despesasBean.idViagem}"/>
+					</h:link>
+				</p:menuitem>
+			</p:breadCrumb>
+		</h:panelGrid>
+					
+		<p:panel header="Despesa">  
+			<h:panelGrid id="_despesa" columns="4" cellpadding="5">
+			
+				<h:outputLabel for="_idDespesa" value="idDespesa:" />
+				<h:inputText id="_idDespesa" value="#{despesasBean.despesa.idDespesa}" disabled="true" />		
+				<h:outputLabel for="_dataDespesa" value="dataDespesa:" />
+				<p:calendar id="_dataDespesa" value="#{despesasBean.despesa.dataDespesa}" pattern="dd/MM/yyyy"/>
+				
+				<h:outputLabel for="_dataHora" value="dataHora:" />
+				<h:inputText id="_dataHora" value="#{despesasBean.despesa.dataHora}"  disabled="true">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+				</h:inputText>		
+				<h:outputLabel for="_descricaoDespesa" value="descricaoDespesa:" />
+				<h:inputTextarea id="_descricaoDespesa" value="#{despesasBean.despesa.descricaoDespesa}" rows="3" />
+				
+				<h:outputLabel for="_tipoDespesa" value="tipoDespesa:" />
+				<h:selectOneMenu id="_tipoDespesa" value="#{despesasBean.despesa.tipoDespesa}">
+					<f:selectItem itemValue="" itemLabel="Selecione..." />
+					<f:selectItems value="#{despesasBean.tipos}" />
+				</h:selectOneMenu>
+				<h:outputLabel for="_valorDespesa" value="valorDespesa:" />
+				<h:inputText id="_valorDespesa" value="#{despesasBean.despesa.valorDespesa}" />
+				
+				<p:commandButton value="#{despesasBean.cmdBtnValue}" action="#{despesasBean.createOrUpdate}" 
+					update="_despesas _despesa" ajax="true" id="_cmdBtnAdicionarAtualizar" />
+				<h:inputHidden id="_idViagem" value="#{despesasBean.idViagem}" />
+				<h:inputHidden id="_idUsuario" value="#{despesasBean.idUsuario}" />
+				<h:inputHidden />
+				
+				<p:ajaxStatus style="width:16px;height:16px;">
+					<f:facet name="start">
+						<h:graphicImage value="../design/ajaxloading.gif" />
+						<h:outputText value="Enviando..." />
+					</f:facet>
+					
+					<f:facet name="complete">
+						<h:outputText value="" />
+					</f:facet>
+				</p:ajaxStatus>
+			</h:panelGrid>
+		
+		</p:panel>
+		<p:spacer width="100" height="10" />
+		<p:dataTable id="_despesas" value="#{despesasBean.despesas}" var="d"
+			paginator="true" rows="5"
+			rowsPerPageTemplate="5,10,15">
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="idDespesa" />
+				</f:facet>
+				<h:outputText value="#{d.idDespesa}" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="dataDespesa" />
+				</f:facet>
+				<h:outputText value="#{d.dataDespesa}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" />  
+				</h:outputText>
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="dataHora" />
+				</f:facet>
+				<h:outputText value="#{d.dataHora}" >
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />  
+				</h:outputText>
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="descricaoDespesa" />
+				</f:facet>
+				<h:outputText value="#{d.descricaoDespesa}" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="tipoDespesa" />
+				</f:facet>
+				<h:outputText value="#{d.tipoDespesa}" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="valorDespesa" />
+				</f:facet>
+				<h:outputText value="#{d.valorDespesa}" />
+			</p:column>
+			
+			<p:column style="width:32px">
+				<f:facet name="header">
+					<h:outputText value="editar" />
+				</f:facet>
+				<p:commandButton update="_form1" image="ui-icon ui-icon-search"
+					label="edit" action="#{despesasBean.loadForUpdate}" ajax="true">
+					<f:setPropertyActionListener target="#{despesasBean.selectedDespesa}" value="#{d}"></f:setPropertyActionListener>
+				</p:commandButton>
+			</p:column>
+			
+		</p:dataTable>
+	</p:panel>
+	</h:form>
+
+</h:body>
+
+</html>

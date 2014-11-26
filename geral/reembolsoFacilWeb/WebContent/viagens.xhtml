@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+<h:head>
+  <title>Reembolso Fácil</title>
+  <link type="text/css" rel="stylesheet" href="css/le-frog/skin.css"/>
+</h:head>
+
+<h:body>
+	
+   	<h:form id="_form1">
+	<p:panel>
+		<h:panelGrid id="_breadCrumbPanel" columns="1" cellpadding="5">
+			<p:breadCrumb>  
+				<p:menuitem value="Home" url="#" />
+				<p:menuitem>
+					<h:link outcome="usuarios" value="Usuários"></h:link>
+				</p:menuitem>
+				<p:menuitem>
+					<h:link outcome="viagens" value="Viagens">
+						<f:param name="idUsuario" value="#{viagensBean.idUsuario}"/>					
+					</h:link>
+				</p:menuitem>
+			</p:breadCrumb>
+		</h:panelGrid>		
+					
+		<p:panel header="Viagem">  
+			<h:panelGrid id="_viagem" columns="4" cellpadding="5">
+			
+				<h:outputLabel for="_idViagem" value="idViagem:" />
+				<h:inputText id="_idViagem" value="#{viagensBean.viagem.idViagem}" disabled="true" />				
+				<h:outputLabel for="_dataInicViagem" value="dataInicViagem:" />
+				<p:calendar id="_dataInicViagem" value="#{viagensBean.viagem.dataInicViagem}" pattern="dd/MM/yyyy" />
+				
+				<h:outputLabel for="_dataFimViagem" value="dataFimViagem" />
+				<p:calendar id="_dataFimViagem" value="#{viagensBean.viagem.dataFimViagem}" pattern="dd/MM/yyyy"/>				
+				<h:outputLabel for="_dataHora" value="aberta:" />
+				<h:selectBooleanCheckbox id="_aberta" value="#{viagensBean.viagem.aberta}" />
+				
+				<h:outputLabel for="_dataHora" value="dataHora:"/>
+				<h:inputText id="_dataHora" value="#{viagensBean.viagem.dataHora}"  disabled="true">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+				</h:inputText>				
+				<h:outputLabel for="_motivoViagem" value="motivoViagem:" />
+				<h:inputTextarea id="_motivoViagem" value="#{viagensBean.viagem.motivoViagem}" rows="3" />
+											
+				<p:commandButton value="#{viagensBean.cmdBtnValue}" action="#{viagensBean.createOrUpdate}"
+					update="_viagens _viagem" id="_cmdBtnAdicionarAtualizar" ajax="true"/>
+				<h:inputHidden id="_idUsuario" value="#{viagensBean.idUsuario}" />
+				<h:inputHidden />
+				<h:inputHidden />
+				
+				<p:ajaxStatus style="width:16px;height:16px;">
+					<f:facet name="start">
+						<h:graphicImage value="../design/ajaxloading.gif" />
+						<h:outputText value="Enviando..." />
+					</f:facet>
+					
+					<f:facet name="complete">
+						<h:outputText value="" />
+					</f:facet>
+				</p:ajaxStatus>
+			</h:panelGrid>
+		
+		</p:panel>
+		<p:spacer width="100" height="10" />
+		<p:dataTable id="_viagens" value="#{viagensBean.viagens}" var="v"
+			paginator="true" rows="5"
+			rowsPerPageTemplate="5,10,15">
+			
+			<p:column style="text-align: center;">
+				<f:facet name="header">
+					<h:outputText value="idViagem" />
+				</f:facet>
+				<p:button outcome="despesas" value="#{v.idViagem}"
+					style="min-width:100px;">
+					<f:param name="idViagem" value="#{v.idViagem}" />
+					<f:param name="idUsuario" value="#{viagensBean.idUsuario}" />
+				</p:button>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="dataInicViagem" />
+				</f:facet>
+				<h:outputText value="#{v.dataInicViagem}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="dataFimViagem" />
+				</f:facet>
+				<h:outputText value="#{v.dataFimViagem}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="dataHora" />
+				</f:facet>
+				<h:outputText value="#{v.dataHora}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+				</h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="motivoViagem" />
+				</f:facet>
+				<h:outputText value="#{v.motivoViagem}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="aberta" />
+				</f:facet>
+				<h:outputText value="#{v.aberta}" />
+			</p:column>
+
+			<p:column style="width:32px">
+				<f:facet name="header">
+					<h:outputText value="editar" />
+				</f:facet>
+				<p:commandButton update="_form1" image="ui-icon ui-icon-search"
+					label="edit" action="#{viagensBean.loadForUpdate}" ajax="true">
+					<f:setPropertyActionListener target="#{viagensBean.selectedViagem}" value="#{v}"></f:setPropertyActionListener>
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	</h:form>
+
+</h:body>
+
+</html>

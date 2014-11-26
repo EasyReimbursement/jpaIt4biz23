@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+<h:head>
+  <title>Reembolso Fácil</title>
+  <link type="text/css" rel="stylesheet" href="${facesContext.externalContext.requestContextPath}/css/south-street/skin.css"/>
+  <style>
+  	.ui-widget,
+	.ui-widget .ui-widget {
+	    font-size: 12px !important;
+	}
+  </style>
+  <link rel="shortcut icon" href="${facesContext.externalContext.requestContextPath}/images/favicon.ico" />
+  <script type="text/javascript"></script>
+</h:head>
+	
+<h:body>
+		
+	<h:form id="_form1">
+	  
+	<p:panel>
+		<p:menubar>  
+		<p:submenu label="Principal">  
+			<p:menuitem value="Viagens" url="/faces/users/viagens.xhtml"/>
+		</p:submenu>
+		<p:submenu>
+			<f:facet name="label">
+				<p:menuitem value="Sair" action="#{usuarioViagensBean.logout}" />
+			</f:facet>
+		</p:submenu>
+		</p:menubar>
+		<h:panelGrid id="_breadCrumbPanel" columns="1" cellpadding="5">
+			<p:breadCrumb>  
+				<p:menuitem value="Home" url="#" />
+				<p:menuitem>
+					<h:link outcome="viagens" value="Viagens">
+						<f:param name="idUsuario" value="#{usuarioViagensBean.idUsuario}"/>					
+					</h:link>
+				</p:menuitem>
+			</p:breadCrumb>
+		</h:panelGrid>		
+					
+		<p:panel header="Viagem">  
+			<h:panelGrid id="_viagem" columns="4" cellpadding="5">
+			
+				<h:outputLabel for="_motivoViagem" value="Motivo:" />
+				<h:inputTextarea id="_motivoViagem" value="#{usuarioViagensBean.viagem.motivoViagem}" rows="3" />
+				<h:outputLabel for="_aberta" value="Aberta:" />
+				<h:selectBooleanCheckbox id="_aberta" value="#{usuarioViagensBean.viagem.aberta}" />
+				
+				<h:outputLabel for="_dataInicViagem" value="Início:" />
+				<p:calendar id="_dataInicViagem" value="#{usuarioViagensBean.viagem.dataInicViagem}" pattern="dd/MM/yyyy" />
+				<h:outputLabel for="_dataFimViagem" value="Fim" />
+				<p:calendar id="_dataFimViagem" value="#{usuarioViagensBean.viagem.dataFimViagem}" pattern="dd/MM/yyyy"/>
+				
+				<h:outputLabel for="_adiantamento" value="Adiantamento:" />
+				<h:inputText id="_adiantamento" value="#{usuarioViagensBean.viagem.adiantamento}">
+					<f:convertNumber maxFractionDigits="2"/>
+				</h:inputText>  					
+				<h:outputLabel for="_totalDespesas" value="Total de despesas:" />
+				<h:inputText id="_totalDespesas" value="#{usuarioViagensBean.viagem.totalDespesas}" disabled="true"/>
+				
+				<h:outputLabel for="_saldo" value="Saldo:" />
+				<h:inputText id="_saldo" value="#{usuarioViagensBean.viagem.saldo}" disabled="true"/>
+				<h:inputHidden />
+				<h:inputHidden />
+										
+				<p:commandButton value="#{usuarioViagensBean.cmdBtnValue}" action="#{usuarioViagensBean.createOrUpdate}"
+					update="_viagens _viagem" id="_cmdBtnAdicionarAtualizar" ajax="true"/>
+				<h:inputHidden id="_idUsuario" value="#{usuarioViagensBean.idUsuario}" />
+				<h:inputHidden />
+				<h:inputHidden />
+				
+				<p:ajaxStatus style="width:16px;height:16px;">
+					<f:facet name="start">
+						<h:graphicImage value="/images/loading.gif" />
+					</f:facet>
+					
+					<f:facet name="complete">
+						<h:outputText value="" />
+					</f:facet>
+				</p:ajaxStatus>
+			</h:panelGrid>
+		
+		</p:panel>
+		<p:spacer width="100" height="10" />
+		<p:dataTable id="_viagens" value="#{usuarioViagensBean.viagens}" var="v"
+			paginator="true" rows="5"
+			rowsPerPageTemplate="5,10,15">
+			
+			<p:column style="width:32px">
+				<f:facet name="header">
+					<h:outputText value="Editar" />
+				</f:facet>
+				<p:commandButton update="_form1" image="ui-icon ui-icon-search"
+					label="edit" action="#{usuarioViagensBean.loadForUpdate}" ajax="true">
+					<f:setPropertyActionListener target="#{usuarioViagensBean.selectedViagem}" value="#{v}"></f:setPropertyActionListener>
+				</p:commandButton>
+			</p:column>
+			
+			<p:column style="text-align: center;">
+				<f:facet name="header">
+					<h:outputText value="Despesas" />
+				</f:facet>
+				<p:button outcome="despesas" label="Despesas" image="ui-icon ui-icon-search">
+					<f:param name="idViagem" value="#{v.idViagem}" />
+					<f:param name="idUsuario" value="#{usuarioViagensBean.idUsuario}" />
+				</p:button>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Início" />
+				</f:facet>
+				<h:outputText value="#{v.dataInicViagem}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Fim" />
+				</f:facet>
+				<h:outputText value="#{v.dataFimViagem}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Motivo" />
+				</f:facet>
+				<h:outputText value="#{v.motivoViagem}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Aberta" />
+				</f:facet>
+				<h:outputText value="#{v.aberta?'sim':'não'}" />
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Adiantamento" />
+				</f:facet>
+				<h:outputText value="#{v.adiantamento}"/>
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Total de despesas" />
+				</f:facet>
+				<h:outputText value="#{v.totalDespesas}"/>
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Saldo" />
+				</f:facet>
+				<h:outputText value="#{v.saldo}"/>
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Data da Criação" />
+				</f:facet>
+				<h:outputText value="#{v.dataHora}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+				</h:outputText>
+			</p:column>
+			
+		</p:dataTable>
+	</p:panel>
+	</h:form>
+		
+</h:body>
+</html>

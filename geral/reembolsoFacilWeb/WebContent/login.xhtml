@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+<h:head>
+	<title>Reembolso Fácil</title>
+	<link type="text/css" rel="stylesheet" href="${facesContext.externalContext.requestContextPath}/css/south-street/skin.css"/>
+	<style>
+  	.ui-widget,
+	.ui-widget .ui-widget {
+	    font-size: 12px !important;
+	}
+	</style>
+	<link rel="shortcut icon" href="${facesContext.externalContext.requestContextPath}/images/favicon.ico" />
+	<script type="text/javascript"></script>
+</h:head>
+	
+<h:body>
+	<p:layout fullPage="true" >
+		<p:layoutUnit position="center" 
+			style="position:absolute;top:50%;left:50%;margin-top:-150px;margin-left:-150px;width:300px;height:300px;">
+			<h:form id="_form1">
+			<p:panel header="Login" footer="©2010 reembolsofacil.com.br" id="display" style="width:300px;text-align:center;">
+				
+				<h:panelGrid columns="2" cellpadding="5">
+				
+					<h:outputLabel for="_login" value="Login:" style=""/>
+					<h:inputText id="_login" value="#{loginBean.usuario.login}" />
+
+					<h:outputLabel for="_pass" value="Senha:" style=""/>
+					<h:inputSecret id="_pass" value="#{loginBean.usuario.senha}" />
+
+					<p:commandButton value="Login" update="display" ajax="true"
+						action="#{loginBean.doLogin}" id="_cmdBtnDoLogin"/>
+
+					<p:ajaxStatus style="width:16px;height:16px;">
+						<f:facet name="start">
+							<h:graphicImage value="/images/loading.gif" />
+						</f:facet>
+						
+						<f:facet name="complete">
+							<h:outputText value="" />
+						</f:facet>
+					</p:ajaxStatus>
+				</h:panelGrid>
+				<p:messages/>
+			</p:panel>
+			</h:form>
+		</p:layoutUnit>
+	</p:layout>
+</h:body>
+</html>
